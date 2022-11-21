@@ -2,68 +2,118 @@
 %author: xavki
 
 
-# KAFKA : INTRODUCTION
-
+# KAFKA : Définitions & Concepts
 
 <br>
 
-* créé en 2009 chez Linkedin
-		* passage en microservices
-		* nombreux pipelines de données
+Kafka = Event Streaming
 
-* opensource en 2011
+<br>
 
-* fondation Apache en 2012
+Event : 
+	* description d'une action métier
+	* à diffuser à un ou plusieurs microservices
+	* stockés sous forme de messages
+	* stockés dans une couche logique nommée topics
 
-* 2014 : départ de l'équipe pour créer Confluent
+----------------------------------------------------------
 
-* le plus rapide du marché
+# KAFKA : Définitions & Concepts
 
-* comprend
-		* réplication
-		* partitionnement
-		* scalabilité
-		* performance
+<br>
 
-* utilisable dans différents cas de figures
-		* data processing
-		* centralisation de logs
-		* métriques...
+Producer :
+	* application cliente qui écrit des données
+	* dans un ou des topics
 
-* associé à zookeeper (évolution en cours)
+<br>
 
-* concurrent RedPanda (Kafka en C++, sans zookeeper)
+Consumer : 
+	* application client qui souscrit à des topics
 
+----------------------------------------------------------
 
-* pubsub : publish & subscribe de messages
-		* structure modulable (producteurs & consommateurs)
-		* découplage entre publishers & subscribers
-		* broker : un serveur
+# KAFKA : Définitions & Concepts
 
-		publishers > brokers/topics > subscribers
+<br>
 
-* les messages sont envoyés dans un topic
+Asynchrone : 
+	* découplage entre l'activité du/des producers
+	* et du/des consumers
 
-* les messages sont stockés sous forme de log (commit log)
-		* une file d'attente
-		* attention différent d'une queue
-		* un log = déplacement d'un offset
+<br>
 
-* chaque consumer est responsable de son offset
+Topics : 
+	* une couche logique de stockage des messages
+	* permettant de lire et de relire les messages
+	* les messages ne sont pas détruits
 
-* messages
+----------------------------------------------------------
 
+# KAFKA : Définitions & Concepts
 
-topics
-partition
-partition offset
-replicas
-brokers
-cluster
-producer
-consumer
-leader
-clef des partitions
+<br>
 
-https://www.tutorialspoint.com/apache_kafka/apache_kafka_fundamentals.htm
+Commit Log :
+	* méthode employé par kafka pour stocker les messages
+	* ordonné, séquentiel et jamais détruit lors de leur consommation
 
+<br>
+
+Offset :
+	* caractéristiques : où commencer (plus tôt ou plus tard)
+	* important pour attester de la bonne délivrance du message
+
+----------------------------------------------------------
+
+# KAFKA : Définitions & Concepts
+
+<br>
+
+Partition :
+	* fragmentation logique des topics en morceaux
+	* permet de distribuer sur l'ensemble d'un même cluster
+	* en les conservant dans le même topic
+	* important pour la performance et la scalibilité
+
+<br>
+
+Clef de partition
+	* information utilisée pour déterminer où stocker
+	* dans quelle partition
+	* fonction de hachage
+
+----------------------------------------------------------
+
+# KAFKA : Définitions & Concepts
+
+<br>
+
+Segments :
+	* au sein des partitions
+	* regroupement de messages pour un stockage physique
+	* valeur par défaut = 1 GB
+
+----------------------------------------------------------
+
+# KAFKA : Définitions & Concepts
+
+<br>
+
+Réplication :
+	* les partitions sont dupliquées (haute disponibilité)
+	* sur un ou plusieurs autres serveurs (brokers)
+	* leader vs follower(s)
+
+----------------------------------------------------------
+
+# KAFKA : Définitions & Concepts
+
+<br>
+
+Consumer Group :
+	* à la différence des producers dont le travail est plus simple
+	* les consumers doivent s'organiser pour consommer les partitions
+	* potentiellement de différents topics
+	* un des brokers à en charge de coordonner (coordinator)
+	* coordinator = en charge de l'offset

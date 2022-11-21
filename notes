@@ -1,0 +1,17 @@
+
+
+
+
+
+APIS : 
+
+	* admin : pour manager les topics, les brokers, acl et autres éléments de Kafka
+
+	* producer : pour écrire des messages
+
+	* consumer : pour souscrire à un ou plusieurs topics et recevoir les messages
+
+	* kafka streams : pour disposer de fonctionnalités avancées : transformations, jointure, regroupement... (input/output)
+
+	* kafka connect : pour utiliser un connecteur permettant spécifiquement de gérer les écriture et les lecture
+			* par exemple directement à une base de données
