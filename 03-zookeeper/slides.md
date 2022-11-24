@@ -98,6 +98,9 @@ sed -i '/ swap / s/^/#/' /etc/fstab
 * installation des binaires kafka et zoo
 
 ```
+export SCALA_VERSION="2.13"
+export KAFKA_VERSION="3.3.1"
+export VERSION=${SCALA_VERSION}-${KAFKA_VERSION}
 wget -q https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_${VERSION}.tgz
 tar xzf kafka_${VERSION}.tgz
 mv kafka_${VERSION} /opt/kafka
@@ -126,8 +129,8 @@ tickTime=2000
 initLimit=10
 # how many ticks can pass before timeout
 syncLimit=5
-# define servers ip and internal ports to zookeeper
-server.1=0.0.0.0:2888:3888 #need to change
+# define servers ip and internal ports to zookeeper (change it)
+server.1=0.0.0.0:2888:3888
 server.2=kafka2:2888:3888
 server.3=kafka3:2888:3888
 ```
@@ -148,9 +151,21 @@ echo 1 > /data/zookeeper/myid
 
 # KAFKA : Zookeeper
 
+<br>
+
+* service systemd - cf fichier joint
+
+-----------------------------------------------------------------------------------
+
+# KAFKA : Zookeeper
+
+<br>
+
 * quelques commandes
 
 ```
+echo srvr | nc 192.168.12.78 2181
+
 create /XavkiZnode "My xavki Znode"
 ls
 get /XavkiZnode

@@ -1,17 +1,27 @@
+https://www.tutorialspoint.com/apache_kafka/apache_kafka_workflow.htm
 
 
+PubSub
 
+    Producers send message to a topic at regular intervals.
 
+    Kafka broker stores all messages in the partitions configured for that particular topic. It ensures the messages are equally shared between partitions. If the producer sends two messages and there are two partitions, Kafka will store one message in the first partition and the second message in the second partition.
 
-APIS : 
+    Consumer subscribes to a specific topic.
 
-	* admin : pour manager les topics, les brokers, acl et autres éléments de Kafka
+    Once the consumer subscribes to a topic, Kafka will provide the current offset of the topic to the consumer and also saves the offset in the Zookeeper ensemble.
 
-	* producer : pour écrire des messages
+    Consumer will request the Kafka in a regular interval (like 100 Ms) for new messages.
 
-	* consumer : pour souscrire à un ou plusieurs topics et recevoir les messages
+    Once Kafka receives the messages from producers, it forwards these messages to the consumers.
 
-	* kafka streams : pour disposer de fonctionnalités avancées : transformations, jointure, regroupement... (input/output)
+    Consumer will receive the message and process it.
 
-	* kafka connect : pour utiliser un connecteur permettant spécifiquement de gérer les écriture et les lecture
-			* par exemple directement à une base de données
+    Once the messages are processed, consumer will send an acknowledgement to the Kafka broker.
+
+    Once Kafka receives an acknowledgement, it changes the offset to the new value and updates it in the Zookeeper. Since offsets are maintained in the Zookeeper, the consumer can read next message correctly even during server outrages.
+
+    This above flow will repeat until the consumer stops the request.
+
+    Consumer has the option to rewind/skip to the desired offset of a topic at any time and read all the subsequent messages.
+
