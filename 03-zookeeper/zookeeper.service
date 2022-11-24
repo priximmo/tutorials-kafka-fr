@@ -2,7 +2,7 @@
 Description=Apache Zookeeper Server
 Documentation=http://kafka.apache.org/documentation.html
 Requires=network.target
-After=network.target zookeeper.service
+After=network.target
 
 [Service]
 Type=simple
