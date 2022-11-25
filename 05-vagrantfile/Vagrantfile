@@ -1,0 +1,96 @@
+Vagrant.configure(2) do |config|
+
+	# before you must install these plugins to speed up vagrant provisionning
+  # vagrant plugin install vagrant-faster
+  # vagrant plugin install vagrant-cachier
+
+  config.cache.auto_detect = true
+	# Set some variables
+  etcHosts = ""
+  kafka = ""
+  kafkaManager = ""
+  prometheus = ""
+
+  # Check ingress controller
+  case ARGV[0]
+    when "provision", "up"
+
+    print "Do you want to install kafka (yes/no) ?\n"
+    kafka = STDIN.gets.chomp
+    print "\n"
+
+    if kafka == "yes"
+      print "Do you want to install kafka manager ?"
+      kafkaManager = STDIN.gets.chomp
+    end
+
+
+  end
+
+	# some settings for common server (not for haproxy)
+  common = <<-SHELL
+  sudo apt update -qq 2>&1 >/dev/null
+  sudo apt install -y -qq curl openjdk-11-jre-headless software-properties-common git vim tree net-tools telnet git 2>&1 >/dev/null
+  sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/g' /etc/ssh/sshd_config
+  sudo systemctl restart sshd
+  SHELL
+
+  #config.vm.box = "debian/bullseye64"
+  #config.vm.box_url = "debian/bullseye64"
+	config.vm.box = "ubuntu/focal64"
+	config.vm.box_url = "ubuntu/focal64"
+
+
+	# set servers list and their parameters
+	NODES = [
+  	{ :hostname => "kafka1", :ip => "192.168.12.78", :cpus => 2, :mem => 2048, :type => "kafka" },
+  	{ :hostname => "kafka2", :ip => "192.168.12.79", :cpus => 2, :mem => 2048, :type => "kafka" },
+  	{ :hostname => "kafka3", :ip => "192.168.12.80", :cpus => 2, :mem => 2048, :type => "kafka" },
+  	{ :hostname => "kmanager", :ip => "192.168.12.77", :cpus => 2, :mem => 1024, :type => "external" }
+	]
+
+	# define /etc/hosts for all servers
+  NODES.each do |node|
+			etcHosts += "echo '" + node[:ip] + "   " + node[:hostname] + "'>> /etc/hosts" + "\n"
+    if node[:type] == "gitlab"
+      etcHosts += "echo '" + node[:ip] + "   " + gitlabUrl + " registry." + gitlabUrl + "' >> /etc/hosts" + "\n"
+    end
+  end #end NODES
+
+	# run installation
+  NODES.each do |node|
+    config.vm.define node[:hostname] do |cfg|
+			cfg.vm.hostname = node[:hostname]
+      cfg.vm.network "private_network", ip: node[:ip]
+      cfg.vm.provider "virtualbox" do |v|
+				v.customize [ "modifyvm", :id, "--cpus", node[:cpus] ]
+        v.customize [ "modifyvm", :id, "--memory", node[:mem] ]
+        v.customize [ "modifyvm", :id, "--natdnshostresolver1", "on" ]
+        v.customize [ "modifyvm", :id, "--natdnsproxy1", "on" ]
+        v.customize [ "modifyvm", :id, "--name", node[:hostname] ]
+				v.customize [ "modifyvm", :id, "--ioapic", "on" ]
+        v.customize [ "modifyvm", :id, "--nictype1", "virtio" ]
+      end #end provider
+			
+			#for all
+      cfg.vm.provision :shell, :inline => etcHosts
+			cfg.vm.provision :shell, :inline => common
+
+      if kafka == "yes"
+        if node[:type] == "kafka"
+          cfg.vm.provision :shell, :path => "install_kafka.sh"
+			  end
+			end
+      if kafkaManager == "yes"
+        if node[:type] == "external"
+          cfg.vm.provision :shell, :path => "install_kafka_manager.sh"
+          cfg.vm.provision :shell, :path => "install_cmak_cluster.sh"
+			  end
+			end
+
+    end # end config
+  end # end nodes
+
+end 
+
+

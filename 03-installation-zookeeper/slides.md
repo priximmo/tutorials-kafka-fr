@@ -2,7 +2,7 @@
 %author: xavki
 
 
-# KAFKA : Zookeeper
+# KAFKA : Installation de Zookeeper
 
 <br>
 
@@ -26,7 +26,7 @@ Système distribué
 
 -----------------------------------------------------------------------------------
 
-# KAFKA : Zookeeper
+# KAFKA : Installation de Zookeeper
 
 <br>
 
@@ -42,7 +42,7 @@ Zookeeper
 
 -----------------------------------------------------------------------------------
 
-# KAFKA : Zookeeper
+# KAFKA : Installation de Zookeeper
 
 <br>
 
@@ -63,7 +63,7 @@ Utilisation dans Kafka
 
 -----------------------------------------------------------------------------------
 
-# KAFKA : Zookeeper
+# KAFKA : Installation de Zookeeper
 
 <br>
 
@@ -78,7 +78,7 @@ chown -R kafka:kafka /data/
 
 -----------------------------------------------------------------------------------
 
-# KAFKA : Zookeeper
+# KAFKA : Installation de Zookeeper
 
 <br>
 
@@ -91,7 +91,7 @@ sed -i '/ swap / s/^/#/' /etc/fstab
 
 -----------------------------------------------------------------------------------
 
-# KAFKA : Zookeeper
+# KAFKA : Installation de Zookeeper
 
 <br>
 
@@ -109,7 +109,7 @@ chown -R kafka:kafka /opt/kafka
 
 -----------------------------------------------------------------------------------
 
-# KAFKA : Zookeeper
+# KAFKA : Installation de Zookeeper
 
 <br>
 
@@ -137,7 +137,7 @@ server.3=kafka3:2888:3888
 
 -----------------------------------------------------------------------------------
 
-# KAFKA : Zookeeper
+# KAFKA : Installation de Zookeeper
 
 <br>
 
@@ -149,7 +149,7 @@ echo 1 > /data/zookeeper/myid
 
 -----------------------------------------------------------------------------------
 
-# KAFKA : Zookeeper
+# KAFKA : Installation de Zookeeper
 
 <br>
 
@@ -157,7 +157,7 @@ echo 1 > /data/zookeeper/myid
 
 -----------------------------------------------------------------------------------
 
-# KAFKA : Zookeeper
+# KAFKA : Installation de Zookeeper
 
 <br>
 
