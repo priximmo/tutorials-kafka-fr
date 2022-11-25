@@ -2,175 +2,87 @@
 %author: xavki
 
 
-# KAFKA : Zookeeper
+# KAFKA : Installation Kafka & CMAK
 
 <br>
 
-Zookeeper
+* Vidéo précédente : installation de Zookeeper
 
-	* use-cases générales :
-			service registry, stockage de configurations
-			cluster management, gestions de locks et concurrences
+* Objectif : installer kafka & kafka manager
 
-	* créé à l'origine par Yahoo
+----------------------------------------------------------------------------
 
-	* leader/followers : nombre impaire car élection (attention si 1/2)
+# KAFKA : Installation Kafka & CMAK
 
 <br>
 
-Système distribué
+* création du répertoire de data pour kafka
 
-	* replication (3 noeuds mini)
+```
+mkdir -p /data/kafka
+chown -R kafka:kafka /data/
+```
 
-	* scalabilité pour augmenter les performances
+----------------------------------------------------------------------------
 
------------------------------------------------------------------------------------
-
-# KAFKA : Zookeeper
-
-<br>
-
-Zookeeper
-
-	* znode associé à un path / /kafka... similaire à consul k/v
-			contient des metadatas : version, timestamp, data length, ACL
-
-	* différents types de znodes :
-			* persistents : persistent même si déconnexion du client
-			* ephemerals : uniquement tant que le client est connecté
-			* sequentials : utiles pour la gestion de sync (path avec incrément)
-
------------------------------------------------------------------------------------
-
-# KAFKA : Zookeeper
+# KAFKA : Installation Kafka & CMAK
 
 <br>
 
-Utilisation dans Kafka
+* activation et démarrage
 
-	* non obligatoire avec l'activation de Kraft
+```
+systemctl daemon-reload
+systemctl enable zookeeper
+systemctl start zookeeper
+systemctl enable kafka
+systemctl start kafka
+```
 
-	* cluster : perte ou arrêt d'un noeud possible (resync)
+----------------------------------------------------------------------------
 
-	* manager et coordonner les brokers du cluster
-
-	* permet de notifier les consumer et producer
-		* élection des leaders
-		* perte de serveurs
-		* nouveaux serveurs
-		* coordonner les consumers
-		* stockage de l'offset pour les consumers
-
------------------------------------------------------------------------------------
-
-# KAFKA : Zookeeper
+# KAFKA : Installation Kafka & CMAK
 
 <br>
 
-* création du user kafka et du répertoire pour zookeeper
+* prérequis : création du user kafka
 
 ```
 groupadd --system kafka
 useradd -s /sbin/nologin --system -g kafka kafka
-mkdir -p /data/zookeeper
-chown -R kafka:kafka /data/
+apt install unzip
 ```
 
------------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
-# KAFKA : Zookeeper
+# KAFKA : Installation Kafka & CMAK
 
 <br>
 
-* arrêt du swap
+* téléchargement de kafka manager & mise en place
 
 ```
-swapoff -a
-sed -i '/ swap / s/^/#/' /etc/fstab
+wget -q https://github.com/yahoo/CMAK/releases/download/3.0.0.6/cmak-3.0.0.6.zip
+unzip -qq cmak-3.0.0.6.zip
+mv  cmak-3.0.0.6 /opt/kafka_manager
+chown -R kafka:kafka /opt/kafka_manager
 ```
 
------------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
-# KAFKA : Zookeeper
+# KAFKA : Installation Kafka & CMAK
 
 <br>
 
-* installation des binaires kafka et zoo
-
-```
-export SCALA_VERSION="2.13"
-export KAFKA_VERSION="3.3.1"
-export VERSION=${SCALA_VERSION}-${KAFKA_VERSION}
-wget -q https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_${VERSION}.tgz
-tar xzf kafka_${VERSION}.tgz
-mv kafka_${VERSION} /opt/kafka
-chown -R kafka:kafka /opt/kafka
-```
-
------------------------------------------------------------------------------------
-
-# KAFKA : Zookeeper
+* installation du service systemd kafka_manager
 
 <br>
 
-* modification du fichier de configuration
+* démarrage
 
 ```
-cat /opt/kafka/config/zookeeper.properties
-# the directory where the snapshot is stored.
-dataDir=/data/zookeeper
-# the port at which the clients will connect
-clientPort=2181
-# setting number of connections to unlimited
-maxClientCnxns=0
-# keeps a heartbeat of zookeeper in milliseconds
-tickTime=2000
-# time for initial synchronization
-initLimit=10
-# how many ticks can pass before timeout
-syncLimit=5
-# define servers ip and internal ports to zookeeper (change it)
-server.1=0.0.0.0:2888:3888
-server.2=kafka2:2888:3888
-server.3=kafka3:2888:3888
+systemctl daemon-reload
+systemctl start kafka_manager
+systemctl enable kafka_manager
 ```
 
------------------------------------------------------------------------------------
-
-# KAFKA : Zookeeper
-
-<br>
-
-* stockage de l'ID du broker (à changer)
-
-```
-echo 1 > /data/zookeeper/myid
-```
-
------------------------------------------------------------------------------------
-
-# KAFKA : Zookeeper
-
-<br>
-
-* service systemd - cf fichier joint
-
------------------------------------------------------------------------------------
-
-# KAFKA : Zookeeper
-
-<br>
-
-* quelques commandes
-
-```
-echo srvr | nc 192.168.12.78 2181
-
-create /XavkiZnode "My xavki Znode"
-ls
-get /XavkiZnode
-stat /XavkiZnode
-set /XavkiZnode
-set /XavkiZnode Data-updated
-rmr /XavkiZnode
-```

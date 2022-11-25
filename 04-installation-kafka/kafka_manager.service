@@ -1,0 +1,17 @@
+[Unit]
+Description=Apache Kafka Manager
+Documentation=http://kafka.apache.org/documentation.html
+Requires=network.target
+After=network.target 
+
+[Service]
+Type=simple
+User=kafka
+Group=kafka
+
+Environment=ZK_HOSTS="kafka1:2181,kafka2:2181,kafka3:2181"
+ExecStart=/opt/kafka_manager/bin/cmak
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
