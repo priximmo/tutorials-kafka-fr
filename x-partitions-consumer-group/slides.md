@@ -49,4 +49,24 @@ Si plus de partitions que de consumer > répartition potentiellement inégale
 
 <br>
 
+Partitions :
 
+	* elles sont en partie de la vitesse de consommation (au-delà du nb de consumers)
+
+	* si changement de nombre attention sur le changement d'ordre (message avec clef)
+
+	* max de 400k partitions mais attention il ne faut pas en abuser (nb fichiers ouverts)
+
+	* perte brutale d'un broker, la réélection du leader pour toutes les partitions
+		* cela peut prendre du temps et augmenter le downtime
+
+	* un broker n'utilise qu'un thread pour répliquer vers les autres brokers
+		* si trop de partition le temps de latence est plus long
+		* un message est considéré comme écrit si il est répliqué
+		
+	* limitation à 100 x nb brokers x nb replicas 
+
+	* les producers gardent en mémoire les messages par partition un temps donné
+		* si plus de partition, plus de messages en mémoire
+
+	* idem côté consumer qui a plus de partitions à gérer et donc plus de mémoire

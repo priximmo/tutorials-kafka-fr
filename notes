@@ -1,27 +1,59 @@
 https://www.tutorialspoint.com/apache_kafka/apache_kafka_workflow.htm
 
 
-PubSub
+export SCALA_VERSION="2.13"
+export KAFKA_VERSION="3.3.1"
+export VERSION=${SCALA_VERSION}-${KAFKA_VERSION}
 
-    Producers send message to a topic at regular intervals.
+swapoff -a
+sed -i '/ swap / s/^/#/' /etc/fstab
 
-    Kafka broker stores all messages in the partitions configured for that particular topic. It ensures the messages are equally shared between partitions. If the producer sends two messages and there are two partitions, Kafka will store one message in the first partition and the second message in the second partition.
+groupadd --system kafka
+useradd -s /sbin/nologin --system -g kafka kafka
 
-    Consumer subscribes to a specific topic.
+wget -q https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_${VERSION}.tgz
 
-    Once the consumer subscribes to a topic, Kafka will provide the current offset of the topic to the consumer and also saves the offset in the Zookeeper ensemble.
+tar xzf kafka_${VERSION}.tgz
+mv kafka_${VERSION} /opt/kafka
+chown -R kafka:kafka /opt/kafka
 
-    Consumer will request the Kafka in a regular interval (like 100 Ms) for new messages.
 
-    Once Kafka receives the messages from producers, it forwards these messages to the consumers.
+cd /opt/kafka/config/kraft/
+mkdir -p /data/kafka
+chown -R kafka:kafka /data/
 
-    Consumer will receive the message and process it.
+cat /opt/kafka/config/kraft/server.properties
+process.roles=broker,controller
+node.id=2
+controller.quorum.voters=1@kafka1:9093,2@localhost:9093,3@kafka3:9093
+listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+inter.broker.listener.name=PLAINTEXT
+advertised.listeners=PLAINTEXT://kafka1:9092
+controller.listener.names=CONTROLLER
+listener.security.protocol.map=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
+num.network.threads=3
+num.io.threads=8
+socket.send.buffer.bytes=102400
+socket.receive.buffer.bytes=102400
+socket.request.max.bytes=104857600
+log.dirs=/data/kafka
+num.partitions=1
+num.recovery.threads.per.data.dir=1
+offsets.topic.replication.factor=1
+transaction.state.log.replication.factor=1
+transaction.state.log.min.isr=1
+log.retention.hours=168
+log.segment.bytes=1073741824
+log.retention.check.interval.ms=300000
 
-    Once the messages are processed, consumer will send an acknowledgement to the Kafka broker.
 
-    Once Kafka receives an acknowledgement, it changes the offset to the new value and updates it in the Zookeeper. Since offsets are maintained in the Zookeeper, the consumer can read next message correctly even during server outrages.
+./bin/kafka-storage.sh random-uuid
 
-    This above flow will repeat until the consumer stops the request.
+./bin/kafka-storage.sh format -t DvCC5GzASTCpbfNGoKcvtA -c config/kraft/server.properties
 
-    Consumer has the option to rewind/skip to the desired offset of a topic at any time and read all the subsequent messages.
+./bin/kafka-topics.sh --create --topic xavki --partitions 3 --replication-factor 3 --bootstrap-server localhost:9092
+./bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+./bin/kafka-topics.sh --bootstrap-server localhost:9093 --describe --topic kraft-test
 
+
+docker run --rm -p 8080:8080 --network=host -e KAFKA_BROKERS=kafka1:9092 docker.redpanda.com/vectorized/console:latest
