@@ -50,10 +50,12 @@ log.retention.check.interval.ms=300000
 ./bin/kafka-storage.sh random-uuid
 
 ./bin/kafka-storage.sh format -t DvCC5GzASTCpbfNGoKcvtA -c config/kraft/server.properties
+./bin/kafka-server-start.sh -daemon ./config/kraft/server.properties
 
 ./bin/kafka-topics.sh --create --topic xavki --partitions 3 --replication-factor 3 --bootstrap-server localhost:9092
 ./bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
 ./bin/kafka-topics.sh --bootstrap-server localhost:9093 --describe --topic kraft-test
 
 
+./bin/kafka-server-stop.sh ./config/kraft/server.properties
 docker run --rm -p 8080:8080 --network=host -e KAFKA_BROKERS=kafka1:9092 docker.redpanda.com/vectorized/console:latest
