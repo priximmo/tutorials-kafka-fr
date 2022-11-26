@@ -52,9 +52,6 @@ Vagrant.configure(2) do |config|
 	# define /etc/hosts for all servers
   NODES.each do |node|
 			etcHosts += "echo '" + node[:ip] + "   " + node[:hostname] + "'>> /etc/hosts" + "\n"
-    if node[:type] == "gitlab"
-      etcHosts += "echo '" + node[:ip] + "   " + gitlabUrl + " registry." + gitlabUrl + "' >> /etc/hosts" + "\n"
-    end
   end #end NODES
 
 	# run installation
