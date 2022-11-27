@@ -6,6 +6,8 @@
 
 <br>
 
+Github : https://github.com/redpanda-data/console
+
 * installation de RedPanda console avec docker
 
 ```
