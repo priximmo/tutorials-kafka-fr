@@ -36,7 +36,7 @@ Consommation simple (Exclusive Consumer)
 Consommation simple (Exclusive Consumer)
 
 
-7- Le consumer traite le message et l'acquite auprès du broket
+7- Le consumer traite le message et l'acquite auprès du broker
 
 <br>
 

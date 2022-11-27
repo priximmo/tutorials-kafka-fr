@@ -6,7 +6,41 @@
 
 <br>
 
-* prérequis : création du répertoire de data pour kafka
+* installation de java
+
+```
+apt install openjdk-11-jre-headless
+```
+
+----------------------------------------------------------------------------
+
+# KAFKA : Installation Kafka & sans Zookeeper (Kraft)
+
+<br>
+
+* installation du binaire
+
+```
+swapoff -a
+sed -i '/ swap / s/^/#/' /etc/fstab
+export SCALA_VERSION="2.13"
+export KAFKA_VERSION="3.3.1"
+export VERSION=${SCALA_VERSION}-${KAFKA_VERSION}
+groupadd --system kafka
+useradd -s /sbin/nologin --system -g kafka kafka
+wget -q https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_${VERSION}.tgz
+tar xzf kafka_${VERSION}.tgz
+mv kafka_${VERSION} /opt/kafka
+chown -R kafka:kafka /opt/kafka
+```
+
+----------------------------------------------------------------------------
+
+# KAFKA : Installation Kafka & sans Zookeeper (Kraft)
+
+<br>
+
+* prérequis : création du user kafka
 
 ```
 mkdir -p /data/kafka
@@ -19,40 +53,11 @@ chown -R kafka:kafka /data/
 
 <br>
 
-* prérequis : création du user kafka
-
-```
-groupadd --system kafka
-useradd -s /sbin/nologin --system -g kafka kafka
-apt install unzip
-```
-
-----------------------------------------------------------------------------
-
-# KAFKA : Installation Kafka & sans Zookeeper (Kraft)
-
-<br>
-
-* téléchargement de kafka manager & mise en place
-
-```
-wget -q https://github.com/yahoo/CMAK/releases/download/3.0.0.6/cmak-3.0.0.6.zip
-unzip -qq cmak-3.0.0.6.zip
-mv  cmak-3.0.0.6 /opt/kafka_manager
-chown -R kafka:kafka /opt/kafka_manager
-```
-
-----------------------------------------------------------------------------
-
-# KAFKA : Installation Kafka & sans Zookeeper (Kraft)
-
-<br>
-
 * création de l'uuid pour la conf du stockage
 
 ```
 ./bin/kafka-storage.sh random-uuid
-
+# ou cat /proc/sys/kernel/random/uuid | tr -d '-' | base64 | cut -b 1-22
 ./bin/kafka-storage.sh format -t DvCC5GzASTCpbfNGoKcvtA -c config/kraft/server.properties
 ```
 

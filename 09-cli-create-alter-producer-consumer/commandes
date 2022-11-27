@@ -1,7 +1,4 @@
-https://www.tutorialspoint.com/apache_kafka/apache_kafka_workflow.htm
-
-
-# via le broker kafka
+# création d'un topics
 ./bin/kafka-topics.sh --create --topic xavki --partitions 3 --replication-factor 3 --bootstrap-server kafka1:9092
 ./bin/kafka-topics.sh --create --topic xavki --partitions 3 --replication-factor 3 --bootstrap-server kafka1:9092 --if-not-exists
 
