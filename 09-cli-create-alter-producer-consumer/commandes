@@ -44,6 +44,7 @@ latest
 Hello world !!!
 
 # pb number min replica (à la place du json de reassignement)
+https://github.com/deviceinsight/kafkactl
 snap install kafkactl
 kafkactl alter topic xavki2 --replication-factor 2 --validate-only
 kafkactl alter topic xavki2 --replication-factor 2
