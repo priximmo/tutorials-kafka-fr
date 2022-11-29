@@ -17,7 +17,7 @@
 # modifier le nombre de partitions (avec kafka-topics)
 ./bin/kafka-topics.sh --bootstrap-server kafka1:9092 --alter --topic xavki2 --partitions 6
 
-# modifier le nombre de partitions (avec kafka-configs)
+# modifier d'autres éléments de configurations (via kafka-configs)
 ./bin/kafka-configs.sh --bootstrap-server kafka1:9092 --alter --entity-type topics --entity-name xavki2 --add-config retention.ms=259200000
 
 # topic purge

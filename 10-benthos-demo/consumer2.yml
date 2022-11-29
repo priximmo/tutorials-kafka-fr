@@ -1,0 +1,21 @@
+http:
+  address: 0.0.0.0:4197
+#https://www.benthos.dev/docs/components/inputs/generate
+
+input:
+  kafka_franz:
+    seed_brokers:
+      - kafka1:9092
+      - kafka2:9092
+      - kafka3:9092
+    topics: 
+      - xavki
+    consumer_group: "consumer_xavki"
+pipeline:
+  processors:
+    - sleep:
+        duration: 100ms
+output:
+  label: ""
+  stdout:
+    codec: lines
