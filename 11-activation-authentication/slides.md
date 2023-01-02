@@ -2,7 +2,7 @@
 %author: xavki
 
 
-# KAFKA : Consumer Group & Partitions
+# KAFKA : SASL & JAAS
 
 <br>
 
