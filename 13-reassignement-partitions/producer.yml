@@ -1,0 +1,22 @@
+http:
+  address: 0.0.0.0:4196
+#https://www.benthos.dev/docs/components/inputs/generate
+
+input:
+  generate:
+    count: 1000000
+    interval: ""
+    mapping: |
+      root.received_at = now()
+      root.message = "Je suis un message " + random_int().string()
+      root.id = uuid_v4()
+      root.host = hostname()
+#https://www.benthos.dev/docs/components/outputs/file
+
+output:
+  kafka_franz:
+    seed_brokers:
+      - kafka1:9092
+      - kafka2:9092
+      - kafka3:9092
+    topic: xavki
