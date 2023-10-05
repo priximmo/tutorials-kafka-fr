@@ -28,6 +28,13 @@
 
 4- Check mntr + stat avec netcat
 
+---------------------------------------------------------------------------------------------
+ 
+# KAFKA : migration de zookeeper 
+
+                                      
+<br>
+
 5- Modification des zookeepers dans la conf kafka & restart de kafka
 
 6- Modification des confs zookeeper en splittant ancien/nouveau
